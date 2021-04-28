@@ -7,5 +7,6 @@ setup(
    author='Pascal Maas',
    author_email='p.maas92@gmail.com',
    packages=['discogslearner'],
-   install_requires=['pandas', 'tqdm', 'numpy', "sklearn", "discogs_client"]
+   install_requires=['pandas', 'tqdm', 'numpy', "sklearn", "discogs_client"],
+   download_url = "https://github.com/Pascallio/DiscogsLearner/archive/refs/tags/v0.1.tar.gz"
 )
