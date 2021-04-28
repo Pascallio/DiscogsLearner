@@ -11,7 +11,8 @@ This package enables predicting similar releases using your Discogs Wantlist and
 
 1. Obtain a Discogs personal access token. See https://www.discogs.com/settings/developers on how to obtain one.
 2. Execute a script like the following:
-```
+
+```python
 import discogslearner
 
 if __name__ == "__main__":
