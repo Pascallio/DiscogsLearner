@@ -5,7 +5,7 @@ this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-version = long_description.split("Version: ")[1][0:3]
+version = str(float(long_description.split("Version: ")[1][0:4]))
 
 setup(
    name='discogslearner',
@@ -17,7 +17,7 @@ setup(
    packages=['discogslearner'],
    install_requires=['pandas', 'tqdm', 'numpy', "sklearn", "discogs_client"],
    url = "https://github.com/Pascallio",
-   download_url = "https://github.com/Pascallio/DiscogsLearner/archive/refs/tags/v0.2.tar.gz",
+   download_url = "https://github.com/Pascallio/DiscogsLearner/archive/refs/tags/v0.21.tar.gz",
    keywords = ["Discogs", "Machine Learning"],
    long_description=long_description,
    long_description_content_type='text/markdown'
