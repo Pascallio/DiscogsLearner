@@ -1,5 +1,7 @@
+from typing import Any, Iterator
 import xml.etree.cElementTree as ET
 from gzip import GzipFile
+import sys
 
 class _Chunker:
     """
@@ -9,11 +11,11 @@ class _Chunker:
     the Discogs datadump releases XML, and even though it is 
     generic, it might not work for differently formatted XMLs.
     """
-    def __init__(self, source, chunk_by):
+    def __init__(self, source: Any, chunk_by: str):
         self.__source = source
         self.__chunk_by = "</{}>".format(chunk_by)
 
-    def chunk(self):
+    def chunk(self) -> Iterator:
         """
         This is the main method of the DiscogsChunker. It unpacks
         the Gzip file and returns a generator for a chunked XML.

@@ -1,7 +1,9 @@
 # DiscogsLearner - ML library for Discogs
 
+[comment]: # Version: 0.2
+
 ## Introduction
-This package enables predicting similar releases using your Discogs Wantlist and/or Collection. To accomplish this, a 2-step process is executed: Data retrieval using the monthly data dumps and data learning using a list of identifiers obtained from your Wantlist and/or Collection. It produces release identifiers together with probabilities of similarity to your input. See *Details* for an in-depth explanation. This package requires quite some RAM to execute. At the time of writing, about 6GB of free RAM is needed to process the whole 'Electronic' genre.
+This package enables predicting similar releases using your Discogs Wantlist and/or Collection. To accomplish this, a 2-step process is executed: Data retrieval using the monthly data dumps and data learning using a list of identifiers obtained from your Wantlist and/or Collection. It produces release identifiers together with probabilities of similarity to your input. See *Details* for an in-depth explanation. This package requires about 3GB of free RAM to process the whole 'Electronic' genre.
 
 ## Installation
 

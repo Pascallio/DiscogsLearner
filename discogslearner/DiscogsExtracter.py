@@ -6,6 +6,10 @@ from .DiscogsChunker import _Chunker as Chunker
 from datetime import datetime
 from urllib.request import urlopen, Request
 from tqdm import tqdm
+import xml.etree.cElementTree as ET
+import sys
+from pathlib import Path
+import os
 
 class Extracter:
     """
@@ -13,11 +17,11 @@ class Extracter:
     By default it selects the recent Releases, but a custom URL
     can be given if needed.
     """
-    def __init__(self, genre="Electronic", url = None):
+    def __init__(self, genre: str="Electronic", url: str = None):
         today = datetime.today()
         self.__url = url
         if url is None:
-            self.__url = "https://discogs-data.s3-us-west-2.amazonaws.com/data/%d/discogs_%d%02d01_releases.xml.gz" % (today.year, today.year, today.month)            
+            self.__url = "https://discogs-data.s3-us-west-2.amazonaws.com/data/%d/discogs_%d%02d01_releases.xml.gz" % (today.year, today.year, today.month)     
 
         self.__main = []
         self.__genre = genre
@@ -26,7 +30,7 @@ class Extracter:
         self.__mapping_countries = {}
         self.__n_releases = self.__get_n_releases()
     
-    def __get_n_releases(self):
+    def __get_n_releases(self) -> int:
         """
         Retrieves the number of releases in the database to use as indicator.
         """
@@ -34,7 +38,7 @@ class Extracter:
         response = json.loads(requests.get(url).text)
         return int(response["statistics"]["releases"])
             
-    def extract(self, output):
+    def extract(self, output: str) -> None:
         """
         Main method for extracting Discogs data. Uses the Chunker class to
         cut up the XML and save RAM. Needs an output file for the data
@@ -42,6 +46,9 @@ class Extracter:
         """
         if output is None:
             raise Exception("No output file given.")
+        
+        os.makedirs(os.path.dirname(output), exist_ok=True)
+
         a = open(output, "w")
         a.write("\t".join(["ReleaseID", "Labels", "Formats", "Year", "Country","Artists", 
                                "Styles", "Tracks", "Companies"]) + "\n")
@@ -52,18 +59,18 @@ class Extracter:
             with tqdm(desc = "Parsing releases from Discogs", total=self.__n_releases) as pbar:
                 for i, chunk in enumerate(c.chunk()):
                     self.__extract_chunk(chunk)
-                    if i % 10000 == 0:
+                    if i % 100000 == 0:
                         self.__write(pd.DataFrame(self.__main), output)
                     pbar.update(1)
             self.__write(pd.DataFrame(self.__main), output)
 
-    def __get_mapping(self, mapping, x):
+    def __get_mapping(self, mapping: dict, x: str) -> int:
         """
         Converts a new value to a integer, saving storage space.
         """
         return mapping.setdefault(x, len(mapping))
         
-    def __extract_chunk(self, chunk):
+    def __extract_chunk(self, chunk: ET) -> None:
         """
         Finds values in a Release and adds them to a list. 
         """
@@ -79,7 +86,7 @@ class Extracter:
             company = ";".join({x[0].text for x in chunk.findall("companies//company")}) 
             self.__main.append((id, labels, format, released, country, artists, styles, tracks, company))
 
-    def __write(self, df, target):
+    def __write(self, df: pd.DataFrame, target: str) -> None:
         """
         Writes processed chunks to the given file.
         """
