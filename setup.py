@@ -17,7 +17,7 @@ setup(
    packages=['discogslearner'],
    install_requires=['pandas', 'tqdm', 'numpy', "sklearn", "discogs_client"],
    url = "https://github.com/Pascallio",
-   download_url = "https://github.com/Pascallio/DiscogsLearner/archive/refs/tags/v0.1.tar.gz",
+   download_url = "https://github.com/Pascallio/DiscogsLearner/archive/refs/tags/v0.2.tar.gz",
    keywords = ["Discogs", "Machine Learning"],
    long_description=long_description,
    long_description_content_type='text/markdown'
