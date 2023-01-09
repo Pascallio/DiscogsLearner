@@ -14,7 +14,6 @@ from tqdm import tqdm
 from datetime import datetime
 warnings.simplefilter(action='ignore', category=FutureWarning)
 from .DiscogsPredictions import Predictions
-from .DiscogsClusters import Clusters
 import sys
 
 class Learner:
@@ -28,7 +27,7 @@ class Learner:
         if not use_wantlist and not use_collection:
             raise Exception("Cannot construct a model without a collection or wantlist.")
         elif token == "":
-            raise Exception("""annot construct a model without a personal acces token.
+            raise Exception("""Cannot construct a model without a personal acces token.
                             See https://www.discogs.com/settings/developers to obtain a token.""")
         
         if debug:
@@ -82,8 +81,6 @@ class Learner:
         sizes = self.__df[[group, "Year"]].groupby(group).size()
         self.__df["%s_size" % group] = sizes.loc[self.__df[group]].values
         self.__df["%s_sort" % group] = np.concatenate([np.arange(1, x + 1) for x in sizes]) 
-
-        
 
         self.__df["%s_sort" % group] = self.__df["%s_sort" % group] / max(self.__df["%s_sort" % group])
         self.__df["%s_size" % group] = self.__df["%s_size" % group] / max(self.__df["%s_size" % group])
@@ -202,6 +199,7 @@ class Learner:
         self.__pc_df = self.__df.groupby(self.__df.index // 5000).progress_apply(
             lambda x: self.__transform_to_pc_space(x, pca, columns)
         ).reset_index(drop=True).apply(pd.to_numeric, downcast="float").round(3)
+
         self.__df.set_index("ReleaseID", inplace = True)
         self.__df = self.__df[["Labels", "Artists", "Companies"]]
         self.__pc_df.set_index(self.__df.index, inplace = True)
@@ -256,7 +254,7 @@ class Learner:
         Returns a sorted Pandas Series object with Release IDs 
         as index and probabilities as values. 
         """
-        self.__set_training_set()
+        self.__set_training_set() # obtains dataframe of training ids
         self.__reduce_database()
         pca, columns = self.__get_pca()
         self.__adjust_pc_df(pca, columns)
